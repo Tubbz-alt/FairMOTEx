@@ -11,3 +11,7 @@ lap
 openpyxl
 Pillow==6.2.2
 tensorboardX
+
+git add .
+git commit -m "提交信息"
+git push -u origin master
