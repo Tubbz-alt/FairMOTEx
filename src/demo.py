@@ -38,6 +38,29 @@ def demo(opt):
         cmd_str = 'ffmpeg -f image2 -i {}/%05d.jpg -b 5000k -c:v mpeg4 {}'.format(osp.join(result_root, 'frame'), output_video_path)
         os.system(cmd_str)
 
+def demo(opt):
+    result_root = opt.output_root
+    mkdir_if_missing(result_root)
+    print('Starting tracking...')
+    list_dir = os.listdir(opt.input_image)
+    list_dir.sort(key=lambda x: int(x[5:]))
+    dataloader = datasets.LoadImages(opt.input_image, opt.img_size)  # 此处已经获取所有测试文件夹和图片
+    for subdir in list_dir:
+        result_filename = os.path.join(result_root, '%s.txt' % subdir)
+        # frame_rate = dataloader.frame_rate
+        frame_dir = None if opt.output_format == 'text' else os.path.join(result_root, 'frame_%s'%subdir)
+        eval_seq(opt, dataloader, 'mot', result_filename,
+                save_dir=frame_dir, show_image=False)
+        dataloader.index += 1
+        BaseTrack._count = 0
+
+        #  try/except语句用来检测try语句块中的错误，从而让except语句捕获异常信息并处理。
+
+        if opt.output_format == 'video':
+            output_video_path = os.path.join(result_root, 'result_%s.mp4'%subdir)
+            cmd_str = 'ffmpeg -f image2 -i {}/%05d.jpg -b:v 5000k -c:v mpeg4 {}'\
+                .format(os.path.join(result_root, 'frame_%s'%subdir), output_video_path)
+            os.system(cmd_str)
 
 if __name__ == '__main__':
     opt = opts().init()

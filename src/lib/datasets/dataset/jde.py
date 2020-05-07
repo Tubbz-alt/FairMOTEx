@@ -53,7 +53,7 @@ class LoadImages:  # for inference
         img, _, _, _ = letterbox(img0, height=self.height, width=self.width)
 
         # Normalize RGB
-        img = img[:, :, ::-1].transpose(2, 0, 1)
+        img = img[:, :, ::-1].transpose(2, 0, 1) # 改变图片读入格式
         img = np.ascontiguousarray(img, dtype=np.float32)
         img /= 255.0
 
